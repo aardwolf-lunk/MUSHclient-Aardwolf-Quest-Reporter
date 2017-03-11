@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE muclient>
+ 
+<muclient>
+ 
+<plugin
+   name="Quest_Tracker"
+   author="Lazor"
+   id="ed7a9679e6cfd50b781e5436"
+   language="Lua"
+   save_state="y"
+   purpose="Report Quest Stats"
+   date_written="2017-01-31 13:19:00"
+   requires="4.98"
+   version="1.2"
+   >
+</plugin>
+  
+<script>
+ 
+<![CDATA[
+function OnPluginBroadcast (msg, id, name, text)
+    if (id == '3e7dedbe37e44942dd46d264') then
+        if (text == "char.stats" or text == "char.maxstats" or text == "char.vitals" or text == "char.worth" or text == "char.status") then
+            res, gmcparg = CallPlugin("3e7dedbe37e44942dd46d264","gmcpval","char") --- We just want the gmcp.char section.
+            luastmt = "gmcpdata = " .. gmcparg
+            assert (loadstring (luastmt or "")) ()
+        end -- GMCP call
+    end -- GMCP Plugin I.D
+   
+    if (text == "comm.quest") then
+ 
+        res, gmcparg = CallPlugin("3e7dedbe37e44942dd46d264", "gmcpval", "comm")
+        luastmt = "gmcpdata = " .. gmcparg
+        assert (loadstring (luastmt or "")) ()
+        local action = gmcpval("quest.action")
+			if (action == "start") then
+				function Initialize()
+					start_time = os.time()
+				end -- Function Initialize
+		Initialize()
+		elseif (action == "comp") then
+		
+			function time_taken(seconds)
+				finish_time = os.time()
+				local seconds = tonumber(finish_time-start_time)
+				if seconds <= 0 then
+					return "00:00:00";
+				else
+					hours = math.floor(seconds/3600)
+					mins =  math.floor(seconds/60 - (hours*60))
+					secs = math.floor(seconds - hours*3600 - mins *60)
+					if mins == 0 then 
+						if secs == 1 then Note ("Quest Completed For : ", last_quest_total, " QP. It Took ", secs, " second.")
+							elseif secs > 1 then Note ("Quest Completed For : ", last_quest_total, " QP. It Took ", secs, " seconds.") 
+						end
+					end
+					if mins == 1 then
+						if secs == 0 then Note ("Quest Completed For : ", last_quest_total, " QP. It Took ", mins, " minute : ", secs, " seconds.")
+						elseif secs == 1 then Note ("Quest Completed For : ", last_quest_total, " QP. It Took ", mins, " minute : ", secs, " second.")
+						elseif secs > 1 then Note ("Quest Completed For : ", last_quest_total, " QP. It Took ", mins, " minute : ", secs, " seconds.")
+						end
+					end
+					if mins > 1 then
+						if secs == 0 then Note ("Quest Completed For : ", last_quest_total, " QP. It Took ", mins, " minutes : ", secs, " seconds.")
+						elseif secs == 1 then Note ("Quest Completed For : ", last_quest_total, " QP. It Took ", mins, " minutes : ", secs, " second.")
+							else Note ("Quest Completed For : ", last_quest_total, " QP. It Took ", mins, " minutes : ", secs, " seconds.")
+						end
+					end
+				end
+			end
+			
+			if tonumber (gmcpval("quest.totqp")) == nil then last_quest_total = tonumber(0)
+				else last_quest_total = tonumber (gmcpval("quest.totqp"))
+			end
+			if tonumber (gmcpval("quest.qp")) == nil then last_quest_base = tonumber(0)
+				else last_quest_base = tonumber (gmcpval("quest.qp"))
+			end
+			if tonumber (gmcpval("quest.mccp")) == nil then last_quest_mccp = tonumber(0)
+				else last_quest_mccp = tonumber (gmcpval("quest.mccp"))
+			end
+			if tonumber (gmcpval("quest.lucky")) == nil then last_quest_lucky = tonumber(0)
+				else last_quest_lucky = tonumber (gmcpval("quest.lucky"))
+			end
+			if tonumber (gmcpval("quest.tierqp")) == nil then last_quest_tier = tonumber(0)
+				else last_quest_tier = tonumber (gmcpval("quest.tierqp"))
+			end
+			if tonumber (gmcpval("quest.pracs")) == nil then last_quest_practices = tonumber(0)
+				else last_quest_practices = tonumber (gmcpval("quest.pracs"))
+			end
+			if tonumber (gmcpval("quest.trains")) == nil then last_quest_trains = tonumber(0)
+				else last_quest_trains = tonumber (gmcpval("quest.trains"))
+			end
+			if tonumber (gmcpval("quest.tp")) == nil then last_quest_tp = tonumber(0)
+				else last_quest_tp = tonumber (gmcpval("quest.tp"))
+			end
+			if tonumber (gmcpval("quest.gold")) == nil then last_quest_gold = tonumber(0)
+				else last_quest_gold = tonumber (gmcpval("quest.gold"))
+			end
+			
+			ColourNote ("yellow", "red", "QUEST TRACKER")
+			ColourNote ("yellow", "red", "TOTAL QP : " .. last_quest_total)
+			ColourNote ("green", "", "base qp : " .. last_quest_base)
+			ColourNote ("green", "", "MCCP : " .. last_quest_mccp)
+			ColourNote ("green", "", "lucky : " .. last_quest_lucky)
+			ColourNote ("green", "", "tier bonus : " .. last_quest_tier)
+			ColourNote ("green", "", "practices : " .. last_quest_practices)
+			ColourNote ("green", "", "trains : " .. last_quest_trains)
+			ColourNote ("green", "", "tp : " .. last_quest_tp)
+			ColourNote ("green", "", "gold : " .. last_quest_gold)
+			
+			time_taken()
+		end
+	end
+end -- function onpluginbroadcast
+
+require "gmcphelper" 
+  
+ ]]>
+ 
+</script>
+ 
+</muclient>
