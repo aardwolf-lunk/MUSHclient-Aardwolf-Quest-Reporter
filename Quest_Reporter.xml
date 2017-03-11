@@ -15,7 +15,18 @@
    version="1.2"
    >
 </plugin>
-  
+ <aliases>
+  <alias
+   match="tellme"
+   enabled="y"
+   expand_variables="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>Note (quest_counter)
+  Note (qp_grand_total)</send>
+  </alias>
+</aliases> 
 <script>
  
 <![CDATA[
@@ -40,7 +51,7 @@ function OnPluginBroadcast (msg, id, name, text)
 				end -- Function Initialize
 		Initialize()
 		elseif (action == "comp") then
-		
+		quest_counter = quest_counter +1
 			function time_taken(seconds)
 				finish_time = os.time()
 				local seconds = tonumber(finish_time-start_time)
@@ -110,13 +121,36 @@ function OnPluginBroadcast (msg, id, name, text)
 			ColourNote ("green", "", "gold : " .. last_quest_gold)
 			
 			time_taken()
+			qp_grand_total = qp_grand_total + last_quest_total
+			qp_average = qp_grand_total / quest_counter
+			Note ("average of : ", qp_average, " QP per quest over a total of : ", quest_counter, " quests.") 
 		end
 	end
 end -- function onpluginbroadcast
 
 require "gmcphelper" 
-  
- ]]>
+function OnPluginInstall ()
+	OnPluginEnable ()
+end
+function OnPluginEnable ()
+	quest_counter = GetVariable ("quest_counter")
+	if quest_counter == nil then
+		SetVariable ("quest_counter", tonumber(0))
+	end
+	quest_counter = GetVariable ("quest_counter")
+	
+	qp_grand_total = GetVariable ("qp_grand_total")
+	if qp_grand_total == nil then
+		SetVariable ("qp_grand_total", tonumber(0))
+	end
+	qp_grand_total = GetVariable ("qp_grand_total")
+
+end  
+function OnPluginSaveState ()
+	  SetVariable ("quest_counter", quest_counter)
+	  SetVariable ("qp_grand_total", qp_grand_total)
+end
+]]>
  
 </script>
  
