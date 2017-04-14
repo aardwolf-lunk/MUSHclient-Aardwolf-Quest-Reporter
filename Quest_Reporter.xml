@@ -123,11 +123,11 @@ function OnPluginBroadcast (msg, id, name, text)
 			ColourNote ("green", "", "gold : " .. last_quest_gold)
 			
 			time_taken()
-			qp_grand_total = qp_grand_total + last_quest_total
-			qp_average = qp_grand_total / quest_counter
-			qp_average = math.floor(qp_average + 0.5)
-
-		end
+				qp_grand_total = qp_grand_total + last_quest_total
+				qp_average = qp_grand_total / quest_counter
+				qp_average = math.floor(qp_average + 0.5)
+				Note ("average of : ", qp_average, " QP per quest over a total of : ", quest_counter, " quests.") 
+			end
 	end
 end -- function onpluginbroadcast
 
