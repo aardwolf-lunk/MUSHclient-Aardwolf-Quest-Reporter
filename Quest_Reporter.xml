@@ -23,9 +23,11 @@
    send_to="12"
    sequence="100"
   >
-  <send>Note (quest_counter)
-  Note (qp_grand_total)</send>
+  <send>Note ("number of quests completed : ", quest_counter)
+  Note ("grand total qp earned from quests : ", qp_grand_total)
+  Note ("average qp per quest : ", qp_average)</send>
   </alias>
+
 </aliases> 
 <script>
  
@@ -123,7 +125,8 @@ function OnPluginBroadcast (msg, id, name, text)
 			time_taken()
 			qp_grand_total = qp_grand_total + last_quest_total
 			qp_average = qp_grand_total / quest_counter
-			Note ("average of : ", qp_average, " QP per quest over a total of : ", quest_counter, " quests.") 
+			qp_average = math.floor(qp_average + 0.5)
+
 		end
 	end
 end -- function onpluginbroadcast
@@ -136,19 +139,26 @@ function OnPluginEnable ()
 	quest_counter = GetVariable ("quest_counter")
 	if quest_counter == nil then
 		SetVariable ("quest_counter", tonumber(0))
-	end
+	end -- if quest counter
 	quest_counter = GetVariable ("quest_counter")
 	
 	qp_grand_total = GetVariable ("qp_grand_total")
 	if qp_grand_total == nil then
 		SetVariable ("qp_grand_total", tonumber(0))
-	end
+	end -- if qp grand total
 	qp_grand_total = GetVariable ("qp_grand_total")
 
-end  
+	qp_average = GetVariable ("qp_average")
+	if qp_average == nil then
+		SetVariable ("qp_average", tonumber(0))
+	end -- if qp average
+	qp_average = GetVariable ("qp_average")
+	qp_average = math.floor(qp_average + 0.5)
+end -- function on plugin enable 
 function OnPluginSaveState ()
 	  SetVariable ("quest_counter", quest_counter)
 	  SetVariable ("qp_grand_total", qp_grand_total)
+	  SetVariable ("qp_average", qp_average)
 end
 ]]>
  
