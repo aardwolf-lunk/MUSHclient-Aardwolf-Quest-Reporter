@@ -25,7 +25,8 @@
   >
   <send>Note ("number of quests completed : ", quest_counter)
   Note ("grand total qp earned from quests : ", qp_grand_total)
-  Note ("average qp per quest : ", qp_average)</send>
+  Note ("average qp per quest : ", qp_average)
+  Note ("average qp to decimal places : ", qp_grand_total / quest_counter)</send>
   </alias>
 
 </aliases> 
