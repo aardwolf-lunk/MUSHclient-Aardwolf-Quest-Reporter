@@ -5,7 +5,7 @@
  
 <plugin
    name="Quest_Tracker"
-   author="Lazor"
+   author="Lazor(Lunk)"
    id="ed7a9679e6cfd50b781e5436"
    language="Lua"
    save_state="y"
